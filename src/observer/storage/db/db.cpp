@@ -17,7 +17,7 @@ See the Mulan PSL v2 for more details. */
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <vector>
-
+#include "db.h"
 #include "common/log/log.h"
 #include "common/os/path.h"
 #include "common/lang/string.h"

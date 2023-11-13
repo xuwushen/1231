@@ -233,6 +233,37 @@ RC Table::get_record(const RID &rid, Record &record)
   return rc;
 }
 
+RC Table::drop()
+{
+  
+  RC rc = sync();
+  if(rc != RC::SUCCESS) return rc;
+
+  std::string meta_path = table_meta_file(base_dir_.c_str(),name());
+  if(unlink(meta_path.c_str()) != 0){
+    LOG_ERROR("failed to remove meta file=%s,errno=%d",meta_path.c_str(),errno);
+    return RC::GENERIC_ERROR;
+  }
+
+  std::string data_path = table_data_file(base_dir_.c_str(),name());
+  if(unlink(data_path.c_str()) != 0){
+    LOG_ERROR("failed to remove meta file=%s,errno=%d",data_path.c_str(),errno);
+    return RC::GENERIC_ERROR;
+  }
+
+  const int index_num = table_meta_.index_num();
+  for(int i=0;i<index_num;i++)
+  {
+    ((BplusTreeIndex*)indexes_[i])->close();
+    const IndexMeta* index_meta = table_meta_.index(i);
+    std::string index_file = table_index_file(base_dir_.c_str(),name(),index_meta->name());
+    if(unlink(index_file.c_str()) != 0){
+      LOG_ERROR("failed to remove index file=%s,errno=%d",index_file.c_str(),errno);
+      return RC::GENERIC_ERROR;
+    }
+  }
+}
+
 RC Table::recover_insert_record(Record &record)
 {
   RC rc = RC::SUCCESS;

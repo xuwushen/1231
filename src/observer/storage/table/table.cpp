@@ -238,7 +238,9 @@ RC Table::drop()
   
   RC rc = sync();
   if(rc != RC::SUCCESS) return rc;
-
+//{
+//  drop table
+//}
   std::string meta_path = table_meta_file(base_dir_.c_str(),name());
   if(unlink(meta_path.c_str()) != 0){
     LOG_ERROR("failed to remove meta file=%s,errno=%d",meta_path.c_str(),errno);

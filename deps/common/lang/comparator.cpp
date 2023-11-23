@@ -23,13 +23,7 @@ int compare_int(void *arg1, void *arg2)
 {
   int v1 = *(int *)arg1;
   int v2 = *(int *)arg2;
-  if (v1 > v2) {
-    return 1;
-  } else if (v1 < v2) {
-    return -1;
-  } else {
-    return 0;
-  }
+  return v1 - v2;
 }
 
 int compare_float(void *arg1, void *arg2)
@@ -64,6 +58,10 @@ int compare_string(void *arg1, int arg1_max_length, void *arg2, int arg2_max_len
     return 0 - s2[maxlen];
   }
   return 0;
+}
+
+int compare_date(void* arg1, void* arg2){
+  return compare_int(arg1, arg2);
 }
 
 } // namespace common
